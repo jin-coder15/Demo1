@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Syed Awais Ali Demo Web</title>
+
+<!-- Fonts: Space Grotesk for display, Inter for body, JetBrains Mono for code -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+/* =====================================================
+   GLOBAL STYLES
+===================================================== */
+:root{
+  --void:#05070d;
+  --surface:#0a0e18;
+  --surface-2:#10162406;
+  --glass: rgba(255,255,255,0.045);
+  --glass-border: rgba(255,255,255,0.09);
+  --text-hi:#eef1fb;
+  --text-mid:#9aa3bd;
+  --text-low:#5d6484;
+  --cyan:#63e6d4;
+  --violet:#a78bfa;
+  --amber:#fbbf67;
+  --danger:#ff7a7a;
+  --font-display:'Space Grotesk', sans-serif;
+  --font-body:'Inter', sans-serif;
+  --font-mono:'JetBrains Mono', monospace;
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+html{ scroll-behavior:smooth; }
+
+body{
+  background:var(--void);
+  color:var(--text-hi);
+  font-family:var(--font-body);
+  overflow-x:hidden;
+  line-height:1.6;
+}
+
+::selection{ background:var(--cyan); color:#05070d; }
+
+img{ max-width:100%; display:block; }
+
+a{ color:inherit; text-decoration:none; }
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; }
+}
+
+.section{
+  position:relative;
+  max-width:1100px;
+  margin:0 auto;
+  padding:120px 24px;
+}
+
+.section-head{
+  margin-bottom:56px;
+  max-width:620px;
+}
+
+.section-head h2{
+  font-family:var(--font-display);
+  font-size:clamp(2rem, 4vw, 2.8rem);
+  font-weight:600;
+  letter-spacing:-0.01em;
+  color:var(--text-hi);
+}
+
+.section-head p{
+  margin-top:14px;
+  color:var(--text-mid);
+  font-size:1.05rem;
+  max-width:52ch;
+}
+
+.glass{
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border-radius:18px;
+}
+
+/* reveal-on-scroll utility */
+.reveal{ opacity:0; transform:translateY(24px); transition:opacity 0.8s ease, transform 0.8s ease; }
+.reveal.is-visible{ opacity:1; transform:translateY(0); }
+
+/* focus visibility for accessibility */
+a:focus-visible, button:focus-visible, input:focus-visible{
+  outline:2px solid var(--cyan);
+  outline-offset:3px;
+}
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+.navbar{
+  position:fixed;
+  top:0; left:0; right:0;
+  z-index:1000;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:22px 40px;
+  transition:background 0.4s ease, backdrop-filter 0.4s ease, border-color 0.4s ease, padding 0.4s ease;
+  border-bottom:1px solid transparent;
+}
+
+.navbar.scrolled{
+  background:rgba(6,9,17,0.72);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--glass-border);
+  padding:14px 40px;
+}
+
+.nav-logo{
+  font-family:var(--font-display);
+  font-weight:600;
+  font-size:1.05rem;
+  letter-spacing:0.02em;
+  color:var(--text-hi);
+}
+.nav-logo span{ color:var(--cyan); }
+
+.nav-links{
+  display:flex;
+  gap:34px;
+  list-style:none;
+}
+
+.nav-links a{
+  font-size:0.92rem;
+  color:var(--text-mid);
+  position:relative;
+  transition:color 0.25s ease;
+}
+.nav-links a:hover{ color:var(--text-hi); }
+.nav-links a::after{
+  content:'';
+  position:absolute; left:0; bottom:-6px;
+  width:0; height:1px;
+  background:var(--cyan);
+  transition:width 0.25s ease;
+}
+.nav-links a:hover::after{ width:100%; }
+
+.nav-toggle{
+  display:none;
+  flex-direction:column;
+  gap:5px;
+  background:none;
+  border:none;
+  cursor:pointer;
+  padding:6px;
+}
+.nav-toggle span{ width:22px; height:2px; background:var(--text-hi); border-radius:2px; }
+
+/* =====================================================
+   HERO SECTION
+===================================================== */
+.hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  padding:140px 40px 80px;
+  overflow:hidden;
+}
+
+#hero-canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+}
+
+.hero-inner{
+  position:relative;
+  z-index:2;
+  max-width:1200px;
+  margin:0 auto;
+  width:100%;
+  display:grid;
+  grid-template-columns:1.15fr 0.85fr;
+  gap:60px;
+  align-items:center;
+}
+
+.hero-eyebrow{
+  font-family:var(--font-mono);
+  font-size:0.82rem;
+  color:var(--cyan);
+  margin-bottom:18px;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+}
+.hero-eyebrow::before{
+  content:'';
+  width:8px; height:8px; border-radius:50%;
+  background:var(--cyan);
+  box-shadow:0 0 12px var(--cyan);
+  animation:pulseDot 2s ease-in-out infinite;
+}
+@keyframes pulseDot{ 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+
+.hero-title{
+  font-family:var(--font-display);
+  font-size:clamp(2.6rem, 6vw, 4.6rem);
+  font-weight:700;
+  line-height:1.05;
+  letter-spacing:-0.02em;
+  color:var(--text-hi);
+}
+
+.hero-title .grad{
+  background:linear-gradient(120deg, var(--cyan), var(--violet));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+.hero-sub{
+  margin-top:22px;
+  font-size:1.12rem;
+  color:var(--text-mid);
+  max-width:52ch;
+}
+
+.hero-cta{
+  margin-top:36px;
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  font-family:var(--font-body);
+  font-weight:500;
+  font-size:0.95rem;
+  padding:13px 26px;
+  border-radius:12px;
+  border:1px solid var(--glass-border);
+  cursor:pointer;
+  transition:transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+}
+
+.btn-primary{
+  background:linear-gradient(120deg, var(--cyan), var(--violet));
+  color:#05070d;
+  border:none;
+  font-weight:600;
+}
+.btn-primary:hover{ transform:translateY(-2px); box-shadow:0 10px 30px -10px rgba(99,230,212,0.55); }
+
+.btn-ghost{
+  background:var(--glass);
+  color:var(--text-hi);
+}
+.btn-ghost:hover{ border-color:var(--cyan); transform:translateY(-2px); }
+
+/* profile picture */
+.hero-portrait-wrap{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.portrait-ring{
+  position:relative;
+  width:min(340px, 80vw);
+  aspect-ratio:1/1;
+  border-radius:50%;
+  padding:6px;
+  background:conic-gradient(from 0deg, var(--cyan), var(--violet), var(--amber), var(--cyan));
+  animation:spinRing 8s linear infinite;
+}
+@keyframes spinRing{ to{ transform:rotate(360deg); } }
+
+.portrait-ring::after{
+  content:'';
+  position:absolute; inset:-14px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(99,230,212,0.25), transparent 70%);
+  z-index:-1;
+  filter:blur(10px);
+}
+
+/* =====================================================
+     PROFILE PICTURE
+     Replace the image "src" below with the path or URL
+     of your own picture. A square image works best.
+===================================================== */
+.portrait-img-frame{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  overflow:hidden;
+  background:var(--surface);
+  transform:perspective(600px) rotateY(0deg);
+  transition:transform 0.4s ease;
+}
+.portrait-img-frame img{
+  width:100%; height:100%;
+  object-fit:cover;
+}
+.hero-portrait-wrap:hover .portrait-img-frame{
+  transform:perspective(600px) rotateY(6deg) rotateX(3deg);
+}
+
+.scroll-cue{
+  position:absolute;
+  bottom:36px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  color:var(--text-low);
+  font-family:var(--font-mono);
+  font-size:0.72rem;
+}
+.scroll-cue .line{
+  width:1px; height:36px;
+  background:linear-gradient(var(--cyan), transparent);
+  animation:scrollLine 1.8s ease-in-out infinite;
+}
+@keyframes scrollLine{ 0%{ transform:scaleY(0); transform-origin:top;} 50%{transform:scaleY(1); transform-origin:top;} 51%{transform-origin:bottom;} 100%{transform:scaleY(0); transform-origin:bottom;} }
+
+/* =====================================================
+   MY STATS
+===================================================== */
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:24px;
+}
+
+.stat-card{
+  padding:34px 28px;
+  position:relative;
+  overflow:hidden;
+  transition:transform 0.35s ease, border-color 0.35s ease;
+}
+.stat-card:hover{
+  transform:translateY(-6px) perspective(600px) rotateX(2deg);
+  border-color:rgba(99,230,212,0.4);
+}
+.stat-card .icon{
+  width:42px; height:42px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:10px;
+  background:rgba(99,230,212,0.1);
+  color:var(--cyan);
+  margin-bottom:22px;
+}
+.stat-number{
+  font-family:var(--font-display);
+  font-size:2.6rem;
+  font-weight:700;
+  color:var(--text-hi);
+}
+.stat-label{
+  margin-top:6px;
+  color:var(--text-mid);
+  font-size:0.95rem;
+}
+
+/* =====================================================
+   WHAT I'M DOING NOW
+===================================================== */
+.now-card{
+  padding:44px;
+  position:relative;
+}
+.now-card p{
+  font-size:1.18rem;
+  color:var(--text-mid);
+  max-width:70ch;
+  line-height:1.75;
+}
+.now-card p strong{ color:var(--text-hi); font-weight:600; }
+
+/* =====================================================
+   DREAM PROJECTS
+===================================================== */
+.dream-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+  gap:22px;
+}
+.dream-card{
+  padding:30px 26px;
+  transition:transform 0.35s ease, border-color 0.35s ease;
+  position:relative;
+}
+.dream-card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(167,139,250,0.4);
+}
+.dream-card .glyph{
+  font-size:1.8rem;
+  margin-bottom:18px;
+  display:inline-block;
+}
+.dream-card h3{
+  font-family:var(--font-display);
+  font-size:1.2rem;
+  font-weight:600;
+  margin-bottom:8px;
+}
+.dream-card p{
+  color:var(--text-mid);
+  font-size:0.94rem;
+  margin-bottom:16px;
+}
+.dream-tag{
+  font-family:var(--font-mono);
+  font-size:0.72rem;
+  color:var(--violet);
+  background:rgba(167,139,250,0.1);
+  padding:5px 10px;
+  border-radius:6px;
+  display:inline-block;
+}
+
+/* =====================================================
+   DEMO PROJECTS
+===================================================== */
+.demo-tabs{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:32px;
+}
+.demo-tab{
+  font-family:var(--font-mono);
+  font-size:0.82rem;
+  padding:10px 18px;
+  border-radius:10px;
+  background:var(--glass);
+  border:1px solid var(--glass-border);
+  color:var(--text-mid);
+  cursor:pointer;
+  transition:all 0.25s ease;
+}
+.demo-tab.active{
+  color:var(--void);
+  background:linear-gradient(120deg, var(--cyan), var(--violet));
+  border-color:transparent;
+}
+.demo-panel{ display:none; padding:32px; min-height:420px; }
+.demo-panel.active{ display:block; }
+
+/* --- calculator --- */
+.calc-wrap{
+  max-width:320px;
+  margin:0 auto;
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid var(--glass-border);
+}
+.calc-screen{
+  background:rgba(0,0,0,0.35);
+  padding:24px 20px;
+  text-align:right;
+  font-family:var(--font-mono);
+}
+.calc-screen .prev{ font-size:0.85rem; color:var(--text-low); min-height:18px; }
+.calc-screen .curr{ font-size:2rem; color:var(--text-hi); word-break:break-all; }
+.calc-buttons{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:1px;
+  background:var(--glass-border);
+}
+.calc-buttons button{
+  border:none;
+  background:var(--surface);
+  color:var(--text-hi);
+  font-family:var(--font-mono);
+  font-size:1.05rem;
+  padding:18px 0;
+  cursor:pointer;
+  transition:background 0.2s ease;
+}
+.calc-buttons button:hover{ background:rgba(255,255,255,0.06); }
+.calc-buttons button.op{ color:var(--cyan); }
+.calc-buttons button.eq{ background:linear-gradient(120deg, var(--cyan), var(--violet)); color:var(--void); font-weight:700; }
+.calc-buttons button.zero{ grid-column:span 2; }
+
+/* --- particle universe --- */
+.universe-wrap{ position:relative; width:100%; height:420px; border-radius:14px; overflow:hidden; background:radial-gradient(ellipse at center, #0d1424, #05070d); }
+#universe-canvas{ width:100%; height:100%; display:block; cursor:crosshair; }
+.universe-hint{ position:absolute; bottom:14px; left:14px; font-family:var(--font-mono); font-size:0.72rem; color:var(--text-low); }
+
+/* --- calendar --- */
+.cal-wrap{ max-width:380px; margin:0 auto; }
+.cal-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.cal-head button{ background:var(--glass); border:1px solid var(--glass-border); color:var(--text-hi); width:34px; height:34px; border-radius:8px; cursor:pointer; font-size:1rem; }
+.cal-head button:hover{ border-color:var(--cyan); }
+.cal-month{ font-family:var(--font-display); font-weight:600; font-size:1.1rem; }
+.cal-grid{ display:grid; grid-template-columns:repeat(7, 1fr); gap:6px; text-align:center; }
+.cal-grid .dow{ font-family:var(--font-mono); font-size:0.7rem; color:var(--text-low); padding-bottom:6px; }
+.cal-day{ padding:10px 0; border-radius:8px; font-size:0.88rem; color:var(--text-mid); cursor:default; }
+.cal-day.today{ background:linear-gradient(120deg, var(--cyan), var(--violet)); color:var(--void); font-weight:700; }
+.cal-day.empty{ visibility:hidden; }
+
+/* --- chatbot --- */
+.chat-wrap{ max-width:460px; margin:0 auto; display:flex; flex-direction:column; height:440px; border-radius:16px; overflow:hidden; border:1px solid var(--glass-border); }
+.chat-head{ padding:14px 18px; background:rgba(255,255,255,0.03); font-family:var(--font-mono); font-size:0.8rem; color:var(--text-mid); display:flex; align-items:center; gap:8px; }
+.chat-head .dot{ width:8px; height:8px; border-radius:50%; background:var(--cyan); box-shadow:0 0 8px var(--cyan); }
+.chat-log{ flex:1; padding:18px; overflow-y:auto; display:flex; flex-direction:column; gap:12px; }
+.bubble{ max-width:80%; padding:11px 15px; border-radius:14px; font-size:0.92rem; line-height:1.5; }
+.bubble.bot{ align-self:flex-start; background:var(--glass); border:1px solid var(--glass-border); border-bottom-left-radius:4px; }
+.bubble.user{ align-self:flex-end; background:linear-gradient(120deg, var(--cyan), var(--violet)); color:var(--void); border-bottom-right-radius:4px; }
+.typing-indicator{ align-self:flex-start; display:flex; gap:4px; padding:12px 15px; background:var(--glass); border:1px solid var(--glass-border); border-radius:14px; border-bottom-left-radius:4px; }
+.typing-indicator span{ width:6px; height:6px; border-radius:50%; background:var(--text-mid); animation:typingBounce 1.2s infinite ease-in-out; }
+.typing-indicator span:nth-child(2){ animation-delay:0.15s; }
+.typing-indicator span:nth-child(3){ animation-delay:0.3s; }
+@keyframes typingBounce{ 0%,60%,100%{ transform:translateY(0); opacity:0.5;} 30%{ transform:translateY(-4px); opacity:1;} }
+.chat-input-row{ display:flex; gap:10px; padding:14px; border-top:1px solid var(--glass-border); }
+.chat-input-row input{ flex:1; background:rgba(255,255,255,0.04); border:1px solid var(--glass-border); border-radius:10px; padding:11px 14px; color:var(--text-hi); font-family:var(--font-body); font-size:0.9rem; }
+.chat-input-row input:focus{ outline:none; border-color:var(--cyan); }
+.chat-input-row button{ background:linear-gradient(120deg, var(--cyan), var(--violet)); border:none; color:var(--void); border-radius:10px; padding:0 18px; cursor:pointer; font-weight:600; }
+
+/* =====================================================
+   PYTHON CONSOLE
+===================================================== */
+.terminal{
+  border-radius:14px;
+  overflow:hidden;
+  border:1px solid var(--glass-border);
+  box-shadow:0 30px 80px -30px rgba(99,230,212,0.15);
+}
+.term-bar{ display:flex; align-items:center; gap:8px; padding:12px 16px; background:rgba(255,255,255,0.03); }
+.term-bar .tdot{ width:11px; height:11px; border-radius:50%; }
+.term-bar .r{ background:#ff6159; } .term-bar .y{ background:#ffbd2e; } .term-bar .g{ background:#28c941; }
+.term-bar .fname{ margin-left:12px; font-family:var(--font-mono); font-size:0.78rem; color:var(--text-low); }
+.term-body{ background:#070a12; padding:22px 24px; font-family:var(--font-mono); font-size:0.88rem; line-height:1.7; min-height:260px; overflow-x:auto; }
+.term-body .ln{ display:flex; gap:18px; }
+.term-body .ln-num{ color:#2c3450; user-select:none; min-width:18px; text-align:right; }
+.term-body .ln-code{ white-space:pre; }
+.tok-kw{ color:var(--violet); } .tok-str{ color:var(--amber); } .tok-fn{ color:var(--cyan); } .tok-com{ color:var(--text-low); } .tok-num{ color:#f472b6; }
+.term-cursor{ display:inline-block; width:8px; height:16px; background:var(--cyan); margin-left:2px; vertical-align:middle; animation:blink 1s step-end infinite; }
+@keyframes blink{ 50%{ opacity:0; } }
+.term-output{ margin-top:14px; color:var(--text-mid); border-top:1px dashed var(--glass-border); padding-top:14px; }
+
+/* =====================================================
+   MY PROJECTS
+===================================================== */
+.projects-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+  gap:22px;
+}
+.project-card{
+  padding:30px 26px;
+  display:flex; flex-direction:column; gap:14px;
+  transition:transform 0.3s ease, border-color 0.3s ease;
+}
+.project-card:hover{ transform:translateY(-6px); border-color:rgba(99,230,212,0.4); }
+.project-card h3{ font-family:var(--font-display); font-size:1.15rem; font-weight:600; }
+.project-card p{ color:var(--text-mid); font-size:0.92rem; flex:1; }
+.project-link{
+  align-self:flex-start;
+  font-family:var(--font-mono);
+  font-size:0.82rem;
+  color:var(--cyan);
+  display:inline-flex; align-items:center; gap:6px;
+  transition:gap 0.25s ease;
+}
+.project-link:hover{ gap:10px; }
+
+/* =====================================================
+   CONTACT
+===================================================== */
+.contact-wrap{ text-align:center; }
+.contact-wrap h2{ font-family:var(--font-display); font-size:clamp(2rem,5vw,3.2rem); font-weight:600; margin-bottom:18px; }
+.contact-wrap p{ color:var(--text-mid); max-width:50ch; margin:0 auto 40px; }
+.contact-links{ display:flex; justify-content:center; gap:18px; flex-wrap:wrap; }
+.contact-pill{
+  display:inline-flex; align-items:center; gap:10px;
+  padding:14px 24px; border-radius:12px;
+  transition:transform 0.25s ease, border-color 0.25s ease;
+}
+.contact-pill:hover{ transform:translateY(-4px); border-color:var(--cyan); }
+
+footer{
+  text-align:center;
+  padding:36px 24px;
+  color:var(--text-low);
+  font-size:0.85rem;
+  font-family:var(--font-mono);
+  border-top:1px solid var(--glass-border);
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+@media (max-width:900px){
+  .hero-inner{ grid-template-columns:1fr; text-align:center; }
+  .hero-cta{ justify-content:center; }
+  .hero-portrait-wrap{ order:-1; }
+  .stats-grid{ grid-template-columns:1fr; }
+  .nav-links{ position:fixed; top:70px; right:24px; left:24px; flex-direction:column; background:rgba(6,9,17,0.95); backdrop-filter:blur(16px); border:1px solid var(--glass-border); border-radius:14px; padding:20px; gap:18px; transform:translateY(-12px); opacity:0; pointer-events:none; transition:all 0.3s ease; }
+  .nav-links.open{ transform:translateY(0); opacity:1; pointer-events:auto; }
+  .nav-toggle{ display:flex; }
+  .section{ padding:90px 20px; }
+}
+@media (max-width:520px){
+  .navbar{ padding:16px 20px; }
+  .demo-panel{ padding:20px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- =====================================================
+     NAVIGATION
+===================================================== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-logo">Awais<span>Lab</span></div>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#hero">Home</a></li>
+    <li><a href="#journey">Journey</a></li>
+    <li><a href="#now">Now</a></li>
+    <li><a href="#dream">Dream</a></li>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- =====================================================
+     HERO SECTION
+===================================================== -->
+<section class="hero" id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">Welcome to Awais’s Digital World</div>
+      <h1 class="hero-title">Syed Awais Ali<br><span class="grad">builds things from the future.</span></h1>
+      <!-- =====================================================
+           EDIT THIS
+           Replace the paragraph below with your own introduction.
+      ===================================================== -->
+      <p class="hero-sub"> Syed Awais Ali is an ICS 1st-year student with a strong interest in software development and modern web technologies. He has hands on experience in designing and developing interactive, responsive, and visually engaging websites. While he is capable of working across both front-end and backend development, his primary focus is currently on Python programming, with a growing interest in GUI development and building practical software applications. He is continuously expanding his technical skills by working on real world projects and exploring new technologies. If you would like to get in touch with Syed Awais Ali for collaboration please use the contact details provided below. </p>
+      <div class="hero-cta">
+        <a href="#projects" class="btn btn-primary">View my work</a>
+        <a href="#contact" class="btn btn-ghost">https://www.instagram.com/sayedawaisalee/</a>
+      </div>
+    </div>
+    <div class="hero-portrait-wrap">
+      <div class="portrait-ring">
+        <!-- =====================================================
+             PROFILE PICTURE
+             Replace the image path below with your own picture.
+             Example: src="my-photo.jpg" (place the file in the
+             same folder as this index.html)
+        ===================================================== -->
+        <div class="portrait-img-frame">
+          <img src="my photo.jpg.jpeg" alt="Portrait of Syed Awais Ali">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-cue"><span>SCROLL</span><span class="line"></span></div>
+</section>
+
+<!-- =====================================================
+     MY STATS
+===================================================== -->
+<section class="section" id="journey">
+  <div class="section-head reveal">
+    <h2>My journey</h2>
+    <p> Still learning, constantly improving, and always exploring something new. I’ve learned a lot so far, but there’s always more to discover and I’ll keep learning, building, and growing along the way.</p>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card glass reveal">
+      <div class="icon">◆</div>
+      <div class="stat-number" data-stat="projects">0</div>
+      <div class="stat-label">Projects completed</div>
+    </div>
+    <div class="stat-card glass reveal">
+      <div class="icon">✦</div>
+      <div class="stat-number" data-stat="ideas">0</div>
+      <div class="stat-label">Ideas</div>
+    </div>
+    <div class="stat-card glass reveal">
+      <div class="icon">⇄</div>
+      <div class="stat-number" data-stat="apiRequests">0</div>
+      <div class="stat-label">API requests</div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     WHAT I'M DOING NOW
+===================================================== -->
+<section class="section" id="now">
+  <div class="section-head reveal">
+    <h2>What I'm doing now</h2>
+  </div>
+  <div class="now-card glass reveal">
+    <!-- =====================================================
+         WHAT I'M DOING NOW
+         Replace the paragraph below with your own text.
+    ===================================================== -->
+    <p>Right now I'm deep in <strong>experimenting with AI agents</strong> Currently, I’m focusing on Python development while exploring GUI, frontend, backend, AI, and automation projects. I’m also building modern websites using HTML, CSS, and JavaScript and continuously improving my programming skills through practical projects and hands on learning.</p>
+  </div>
+</section>
+
+<!-- =====================================================
+     DREAM PROJECTS
+===================================================== -->
+<section class="section" id="dream">
+  <div class="section-head reveal">
+    <h2>Dream projects</h2>
+    <p>Things I want to build someday. This list keeps growing.</p>
+  </div>
+  <!-- =====================================================
+       EDIT THIS
+       Add, remove or rename dream projects below. Each card
+       needs: a glyph/emoji, a name, a description and a tag.
+  ===================================================== -->
+  <div class="dream-grid" id="dreamGrid"></div>
+</section>
+
+<!-- =====================================================
+     DEMO PROJECTS
+===================================================== -->
+<section class="section" id="demo">
+  <div class="section-head reveal">
+    <h2>Demo projects</h2>
+    <p>Small interactive builds you can actually play with, right here.</p>
+  </div>
+
+  <div class="demo-tabs">
+    <button class="demo-tab active" data-target="panel-calc">Calculator</button>
+    <button class="demo-tab" data-target="panel-universe">Particle Universe</button>
+    <button class="demo-tab" data-target="panel-cal">Smart Calendar</button>
+    <button class="demo-tab" data-target="panel-chat">Awais Chatbot</button>
+  </div>
+
+  <!-- Calculator -->
+  <div class="demo-panel glass active" id="panel-calc">
+    <div class="calc-wrap">
+      <div class="calc-screen">
+        <div class="prev" id="calcPrev">&nbsp;</div>
+        <div class="curr" id="calcCurr">0</div>
+      </div>
+      <div class="calc-buttons" id="calcButtons">
+        <button data-action="clear">AC</button>
+        <button data-action="sign">±</button>
+        <button data-action="percent">%</button>
+        <button class="op" data-op="/">÷</button>
+        <button data-num="7">7</button>
+        <button data-num="8">8</button>
+        <button data-num="9">9</button>
+        <button class="op" data-op="*">×</button>
+        <button data-num="4">4</button>
+        <button data-num="5">5</button>
+        <button data-num="6">6</button>
+        <button class="op" data-op="-">−</button>
+        <button data-num="1">1</button>
+        <button data-num="2">2</button>
+        <button data-num="3">3</button>
+        <button class="op" data-op="+">+</button>
+        <button class="zero" data-num="0">0</button>
+        <button data-action="decimal">.</button>
+        <button class="eq" data-action="equals">=</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Particle Universe -->
+  <div class="demo-panel glass" id="panel-universe">
+    <div class="universe-wrap">
+      <canvas id="universe-canvas"></canvas>
+      <div class="universe-hint">move your mouse — click to burst</div>
+    </div>
+  </div>
+
+  <!-- Smart Calendar -->
+  <div class="demo-panel glass" id="panel-cal">
+    <div class="cal-wrap">
+      <div class="cal-head">
+        <button id="calPrev" aria-label="Previous month">‹</button>
+        <div class="cal-month" id="calMonthLabel"></div>
+        <button id="calNext" aria-label="Next month">›</button>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+  </div>
+
+  <!-- Awais Chatbot -->
+  <div class="demo-panel glass" id="panel-chat">
+    <div class="chat-wrap">
+      <div class="chat-head"><span class="dot"></span> Awais Chatbot — demo</div>
+      <div class="chat-log" id="chatLog">
+        <div class="bubble bot">Hey! I'm a small demo chatbot</div>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="chatInput" placeholder="Type a message…" autocomplete="off">
+        <button id="chatSend">Send</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     PYTHON CONSOLE
+===================================================== -->
+<section class="section" id="terminal-section">
+  <div class="section-head reveal">
+    <h2>Python console</h2>
+    <p>A little program I like to keep pinned to my portfolio.</p>
+  </div>
+  <div class="terminal reveal">
+    <div class="term-bar">
+      <span class="tdot r"></span><span class="tdot y"></span><span class="tdot g"></span>
+      <span class="fname">signal.py</span>
+    </div>
+    <!-- =====================================================
+         PYTHON CONSOLE CODE
+         Replace the Python code below with any program
+         you want to display on your portfolio.
+    ===================================================== -->
+    <div class="term-body" id="termBody"></div>
+  </div>
+</section>
+
+<!-- =====================================================
+     MY PROJECTS
+===================================================== -->
+<section class="section" id="projects">
+  <div class="section-head reveal">
+    <h2>My projects</h2>
+    <p>Live builds — click through to open any of them.</p>
+  </div>
+
+  <!-- =====================================================
+       MY PROJECT LINKS
+
+       Paste your actual project URLs inside the href=""
+       attributes below. Duplicate a .project-card block to
+       add more projects.
+
+       Example:
+       href="https://your-project.com"
+  ===================================================== -->
+  <div class="projects-grid">
+    <div class="project-card glass">
+      <h3>Project 01</h3>
+      <p>A Virtual Solar System 🪐</p>
+      <a class="project-link" href="https://jin-coder15.github.io/solar-system0/" target="_blank" rel="noopener">VIEW PROJECT →</a>
+    </div>
+    <div class="project-card glass">
+      <h3>Project 02</h3>
+      <p> A Visit to Awais Lab </p>
+      <a class="project-link" href="https://jin-coder15.github.io/shah_lab/" target="_blank" rel="noopener">VIEW PROJECT →</a>
+    </div>
+    <div class="project-card glass">
+      <h3>Project 03</h3>
+      <p>Game: No Second Chance ☠️</p>
+      <a class="project-link" href="https://jin-coder15.github.io/game/" target="_blank" rel="noopener">VIEW PROJECT →</a>
+    </div>
+    <div class="project-card glass">
+      <h3>Project 04</h3>
+      <p>I’ve also built a fun Love Calculator  just for those important scientific investigations of the heart! ❤️😂  </p>
+      <a class="project-link" href="https://jin-coder15.github.io/calculator/" target="_blank" rel="noopener">VIEW PROJECT →</a>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================
+     CONTACT
+===================================================== -->
+<section class="section contact-wrap" id="contact">
+  <h2>Contact me</h2>
+  <p>Have an idea, a project, or just want to say hi ? Reach out.</p>
+  <div class="contact-links">
+    <!-- =====================================================
+         INSTAGRAM LINK
+         Replace the URL below with your Instagram profile URL.
+    ===================================================== -->
+    <a class="contact-pill glass" href="https://www.instagram.com/sayedawaisalee/" target="_blank" rel="noopener">Instagram</a>
+
+    <!-- EDIT THIS: replace with your GitHub profile URL -->
+    <a class="contact-pill glass" href="https://www.tiktok.com/@sayedawaisalee" target="_blank" rel="noopener">Tik Tok</a>
+
+  
+  </div>
+</section>
+
+<footer>© <span id="year"></span>Made by Syed Awais Ali &amp;</footer>
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ---------- Navigation: scroll state + mobile toggle ---------- */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 40);
+});
+
+const navToggle = document.getElementById('navToggle');
+const navLinks = document.getElementById('navLinks');
+navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+/* ---------- Scroll reveal ---------- */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('is-visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ---------- Hero background: floating particle field ---------- */
+(function heroCanvas(){
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let w, h, particles = [];
+
+  function resize(){
+    w = canvas.width = canvas.offsetWidth;
+    h = canvas.height = canvas.offsetHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const COUNT = Math.min(90, Math.floor(w / 14));
+  for (let i = 0; i < COUNT; i++){
+    particles.push({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      r: Math.random() * 1.6 + 0.4,
+      vx: (Math.random() - 0.5) * 0.25,
+      vy: (Math.random() - 0.5) * 0.25,
+      hue: Math.random() > 0.5 ? '99,230,212' : '167,139,250'
+    });
+  }
+
+  function tick(){
+    ctx.clearRect(0, 0, w, h);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > w) p.vx *= -1;
+      if (p.y < 0 || p.y > h) p.vy *= -1;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.hue},0.55)`;
+      ctx.fill();
+    });
+    for (let i = 0; i < particles.length; i++){
+      for (let j = i + 1; j < particles.length; j++){
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 110){
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(99,230,212,${0.12 * (1 - dist / 110)})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+/* =====================================================
+   MY STATS
+   Change these numbers to your own statistics.
+===================================================== */
+const stats = {
+  projects: 14,
+  ideas: 47,
+  apiRequests: 12500
+};
+
+function animateCounter(el, target){
+  const duration = 1400;
+  const start = performance.now();
+  function frame(now){
+    const progress = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const value = Math.floor(eased * target);
+    el.textContent = value.toLocaleString();
+    if (progress < 1) requestAnimationFrame(frame);
+    else el.textContent = target.toLocaleString();
+  }
+  requestAnimationFrame(frame);
+}
+
+const statObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting){
+      const key = entry.target.dataset.stat;
+      animateCounter(entry.target, stats[key]);
+      statObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('[data-stat]').forEach(el => statObserver.observe(el));
+
+/* =====================================================
+   DREAM PROJECTS
+   Edit the array below to add/remove/rename dream projects.
+===================================================== */
+const dreamProjects = [
+  { glyph: '🤖', name: 'AI Assistant / JARVIS', desc: 'A voice-driven personal assistant that actually understands context.', tag: 'AI · Voice' },
+  { glyph: '✨', name: 'Particle Universe', desc: 'A full generative art engine built on physics-driven particles.', tag: 'Creative Coding' },
+  { glyph: '🖥️', name: 'Smart Operating System', desc: 'A minimal OS shell with an AI layer built into the desktop.', tag: 'Systems' },
+  { glyph: '🧠', name: 'Advanced AI Projects', desc: 'Small experiments in reasoning, memory and agents.', tag: 'Research' },
+  { glyph: '🚀', name: 'Future Tech Lab', desc: 'A sandbox for whatever technology I get curious about next.', tag: 'Experimental' }
+];
+
+const dreamGrid = document.getElementById('dreamGrid');
+dreamProjects.forEach(p => {
+  const card = document.createElement('div');
+  card.className = 'dream-card glass reveal';
+  card.innerHTML = `
+    <span class="glyph">${p.glyph}</span>
+    <h3>${p.name}</h3>
+    <p>${p.desc}</p>
+    <span class="dream-tag">${p.tag}</span>
+  `;
+  dreamGrid.appendChild(card);
+  revealObserver.observe(card);
+});
+
+/* ---------- Demo tabs ---------- */
+const demoTabs = document.querySelectorAll('.demo-tab');
+demoTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    demoTabs.forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.demo-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.target).classList.add('active');
+    if (tab.dataset.target === 'panel-universe'){
+      // Let the canvas resize on the next frame, once the panel is
+      // actually visible and has real dimensions.
+      requestAnimationFrame(() => window.dispatchEvent(new Event('universe:activated')));
+    }
+  });
+});
+
+/* ---------- Calculator ---------- */
+(function calculator(){
+  const currEl = document.getElementById('calcCurr');
+  const prevEl = document.getElementById('calcPrev');
+  let current = '0', previous = '', operator = null, resetNext = false;
+
+  function updateDisplay(){
+    currEl.textContent = current;
+    prevEl.textContent = previous && operator ? `${previous} ${operator}` : '\u00A0';
+  }
+
+  function compute(){
+    const a = parseFloat(previous), b = parseFloat(current);
+    if (isNaN(a) || isNaN(b)) return current;
+    let result;
+    switch(operator){
+      case '+': result = a + b; break;
+      case '-': result = a - b; break;
+      case '*': result = a * b; break;
+      case '/': result = b === 0 ? 0 : a / b; break;
+      default: return current;
+    }
+    return String(Math.round(result * 1e10) / 1e10);
+  }
+
+  document.getElementById('calcButtons').addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+
+    if (btn.dataset.num !== undefined){
+      if (current === '0' || resetNext){ current = btn.dataset.num; resetNext = false; }
+      else current += btn.dataset.num;
+    } else if (btn.dataset.op){
+      if (operator && !resetNext) { current = compute(); }
+      previous = current;
+      operator = btn.dataset.op;
+      resetNext = true;
+    } else if (btn.dataset.action === 'clear'){
+      current = '0'; previous = ''; operator = null; resetNext = false;
+    } else if (btn.dataset.action === 'sign'){
+      current = String(parseFloat(current) * -1);
+    } else if (btn.dataset.action === 'percent'){
+      current = String(parseFloat(current) / 100);
+    } else if (btn.dataset.action === 'decimal'){
+      if (!current.includes('.')) current += '.';
+    } else if (btn.dataset.action === 'equals'){
+      if (operator){
+        current = compute();
+        operator = null; previous = ''; resetNext = true;
+      }
+    }
+    updateDisplay();
+  });
+  updateDisplay();
+})();
+
+/* ---------- Particle Universe demo ---------- */
+(function universe(){
+  const canvas = document.getElementById('universe-canvas');
+  const ctx = canvas.getContext('2d');
+  let w, h, stars = [], mouse = { x: null, y: null };
+
+  function resize(){
+    // The panel this canvas lives in can be hidden (display:none) when
+    // this script first runs, which would make offsetWidth/Height read
+    // as 0. Fall back to the wrapper's size, or a sane default, so the
+    // canvas is never initialised at 0x0.
+    const rect = canvas.parentElement.getBoundingClientRect();
+    w = canvas.width = rect.width || canvas.offsetWidth || 600;
+    h = canvas.height = rect.height || canvas.offsetHeight || 420;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  // Re-measure whenever the "Particle Universe" tab is actually shown,
+  // since a hidden panel reports a size of 0 while it's not displayed.
+  // Also re-scatter any stars that got stuck at (0,0) from that
+  // initial hidden-panel measurement.
+  window.addEventListener('universe:activated', () => {
+    resize();
+    stars.forEach(s => {
+      if (s.x === 0 && s.y === 0){
+        s.x = Math.random() * w;
+        s.y = Math.random() * h;
+      }
+    });
+  });
+
+  function makeStar(x, y){
+    return {
+      x: x ?? Math.random() * w,
+      y: y ?? Math.random() * h,
+      z: Math.random() * 2 + 0.3,
+      vx: (Math.random() - 0.5) * 0.6,
+      vy: (Math.random() - 0.5) * 0.6
+    };
+  }
+  for (let i = 0; i < 140; i++) stars.push(makeStar());
+
+  canvas.addEventListener('mousemove', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - rect.left;
+    mouse.y = e.clientY - rect.top;
+  });
+  canvas.addEventListener('mouseleave', () => { mouse.x = null; mouse.y = null; });
+  canvas.addEventListener('click', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    for (let i = 0; i < 18; i++) stars.push(makeStar(e.clientX - rect.left, e.clientY - rect.top));
+    if (stars.length > 300) stars.splice(0, stars.length - 300);
+  });
+
+  function tick(){
+    ctx.clearRect(0, 0, w, h);
+    stars.forEach(s => {
+      s.x += s.vx; s.y += s.vy;
+      if (mouse.x !== null){
+        const dx = mouse.x - s.x, dy = mouse.y - s.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 130){
+          s.x -= dx / dist * 0.6;
+          s.y -= dy / dist * 0.6;
+        }
+      }
+      if (s.x < 0) s.x = w; if (s.x > w) s.x = 0;
+      if (s.y < 0) s.y = h; if (s.y > h) s.y = 0;
+
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.z, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(99,230,212,${0.4 + s.z / 3})`;
+      ctx.fill();
+    });
+    for (let i = 0; i < stars.length; i++){
+      for (let j = i + 1; j < stars.length; j++){
+        const dx = stars[i].x - stars[j].x, dy = stars[i].y - stars[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 90){
+          ctx.beginPath();
+          ctx.moveTo(stars[i].x, stars[i].y);
+          ctx.lineTo(stars[j].x, stars[j].y);
+          ctx.strokeStyle = `rgba(167,139,250,${0.15 * (1 - dist / 90)})`;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+/* ---------- Smart Calendar ---------- */
+(function calendar(){
+  const monthLabel = document.getElementById('calMonthLabel');
+  const grid = document.getElementById('calGrid');
+  const today = new Date();
+  let viewYear = today.getFullYear();
+  let viewMonth = today.getMonth();
+
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const dowNames = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+
+  function render(){
+    grid.innerHTML = '';
+    monthLabel.textContent = `${monthNames[viewMonth]} ${viewYear}`;
+    dowNames.forEach(d => {
+      const el = document.createElement('div');
+      el.className = 'dow'; el.textContent = d;
+      grid.appendChild(el);
+    });
+    const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+    const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+    for (let i = 0; i < firstDay; i++){
+      const empty = document.createElement('div');
+      empty.className = 'cal-day empty';
+      grid.appendChild(empty);
+    }
+    for (let d = 1; d <= daysInMonth; d++){
+      const el = document.createElement('div');
+      el.className = 'cal-day';
+      el.textContent = d;
+      if (d === today.getDate() && viewMonth === today.getMonth() && viewYear === today.getFullYear()){
+        el.classList.add('today');
+      }
+      grid.appendChild(el);
+    }
+  }
+
+  document.getElementById('calPrev').addEventListener('click', () => {
+    viewMonth--; if (viewMonth < 0){ viewMonth = 11; viewYear--; }
+    render();
+  });
+  document.getElementById('calNext').addEventListener('click', () => {
+    viewMonth++; if (viewMonth > 11){ viewMonth = 0; viewYear++; }
+    render();
+  });
+  render();
+})();
+
+/* ---------- Awais Chatbot ---------- */
+(function chatbot(){
+  const log = document.getElementById('chatLog');
+  const input = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('chatSend');
+
+  function addBubble(text, who){
+    const b = document.createElement('div');
+    b.className = `bubble ${who}`;
+    b.textContent = text;
+    log.appendChild(b);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function showTyping(){
+    const t = document.createElement('div');
+    t.className = 'typing-indicator';
+    t.id = 'typingNow';
+    t.innerHTML = '<span></span><span></span><span></span>';
+    log.appendChild(t);
+    log.scrollTop = log.scrollHeight;
+  }
+  function hideTyping(){
+    const t = document.getElementById('typingNow');
+    if (t) t.remove();
+  }
+
+  function getReply(msg){
+    const lower = msg.toLowerCase();
+    const madeYouPatterns = ['who made you', 'who created you', 'who built you', 'who developed you', 'made you', 'created you'];
+    if (madeYouPatterns.some(p => lower.includes(p))){
+      return 'Syed Awais Ali ne mujhe banaya hai.';
+    }
+    return 'Sorry, ap Awais se pooch lo...';
+  }
+
+  function handleSend(){
+    const msg = input.value.trim();
+    if (!msg) return;
+    addBubble(msg, 'user');
+    input.value = '';
+    showTyping();
+    setTimeout(() => {
+      hideTyping();
+      addBubble(getReply(msg), 'bot');
+    }, 800 + Math.random() * 500);
+  }
+
+  sendBtn.addEventListener('click', handleSend);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleSend(); });
+})();
+
+/* =====================================================
+   PYTHON CONSOLE CODE
+   Replace the Python code below with any program
+   you want to display on your portfolio.
+===================================================== */
+const pythonCode = [
+  { t: 'com', c: '# a tiny signal generator' },
+  { t: 'kw',  c: 'import math' },
+  { t: 'blank', c: '' },
+  { t: 'kw',  c: 'def', c2: ' pulse(', c3: 'n', c4: '):' , mixed:true},
+  { t: 'raw', c: '    return [round(math.sin(i / 3), 2) for i in range(n)]' },
+  { t: 'blank', c: '' },
+  { t: 'raw', c: 'signal = pulse(10)' },
+  { t: 'fn',  c: 'print(signal)' }
+];
+
+function highlightLine(entry){
+  if (entry.t === 'com') return `<span class="tok-com">${entry.c}</span>`;
+  if (entry.t === 'kw') return `<span class="tok-kw">${entry.c}</span>`;
+  if (entry.t === 'fn') return `<span class="tok-fn">${entry.c}</span>`;
+  if (entry.t === 'blank') return '';
+  return entry.c
+    .replace(/(def|return|for|in|range)/g, '<span class="tok-kw">$1</span>')
+    .replace(/(\d+)/g, '<span class="tok-num">$1</span>');
+}
+
+const termBody = document.getElementById('termBody');
+let lineIndex = 0;
+
+function typeNextLine(){
+  if (lineIndex >= pythonCode.length){
+    const out = document.createElement('div');
+    out.className = 'term-output';
+    out.textContent = '>>> [0.0, 0.32, 0.62, 0.87, 0.99, 0.96, 0.78, 0.47, 0.11, -0.26]';
+    termBody.appendChild(out);
+    return;
+  }
+  const row = document.createElement('div');
+  row.className = 'ln';
+  const num = document.createElement('span');
+  num.className = 'ln-num';
+  num.textContent = lineIndex + 1;
+  const code = document.createElement('span');
+  code.className = 'ln-code';
+  code.innerHTML = highlightLine(pythonCode[lineIndex]) + '<span class="term-cursor"></span>';
+  row.appendChild(num);
+  row.appendChild(code);
+  termBody.appendChild(row);
+
+  const prevCursor = termBody.querySelectorAll('.term-cursor');
+  if (prevCursor.length > 1) prevCursor[0].remove();
+
+  lineIndex++;
+  setTimeout(typeNextLine, 260);
+}
+
+const termObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting){
+      typeNextLine();
+      termObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+termObserver.observe(document.getElementById('terminal-section'));
+</script>
+</body>
+</html>
